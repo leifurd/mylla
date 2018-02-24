@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.*?>
+<?import is.hi.mylla.vidmot.*?>
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Group xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="is.hi.mylla.vidmot.MyllaAdalController">
+   <children>
+      <AnchorPane prefHeight="606.0" prefWidth="847.0">
+         <children>
+            <SplitPane prefHeight="605.0" prefWidth="847.0">
+              <items>
+                  <MyllaPane fx:id="myllaBord" prefHeight="668.0" prefWidth="386.0">
+                     <children>
+                        <Canvas fx:id="mittCanvas" height="605.0" width="415.0" />
+                     </children>
+                  </MyllaPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="482.0" prefWidth="373.0">
+                     <children>
+                        <Label fx:id="skilabod" layoutX="48.0" layoutY="269.0" prefHeight="64.0" prefWidth="190.0" />
+                        <RadioButton id="1" fx:id="jLeikmadur1" layoutX="48.0" layoutY="82.0" mnemonicParsing="false" onAction="#leikmadurHandler" text="Leikmaður 1">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="leikmennToggle" />
+                           </toggleGroup></RadioButton>
+                        <RadioButton id="2" fx:id="jLeikmadur2" layoutX="48.0" layoutY="128.0" mnemonicParsing="false" onAction="#leikmadurHandler" text="Leikmaður 2" toggleGroup="$leikmennToggle" />
+                     </children>
+                  </AnchorPane>
+              </items>
+            </SplitPane>
+            <fx:include fx:id="sDialog" source="NyrLeikurDialog.fxml" />
+          <MenuBar prefHeight="47.0" prefWidth="845.0">
+                    <menus>
+                      <Menu mnemonicParsing="false" text="File">
+                        <items>
+                          <MenuItem mnemonicParsing="false" onAction="#nyrLeikurHandler" text="Nyr Leikur" />
+                              <MenuItem mnemonicParsing="false" onAction="#haettaHandler" text="Hætta" />
+                        </items>
+                      </Menu>
+                    </menus>
+          </MenuBar>
+         </children>
+      </AnchorPane>
+   </children>
+</Group>
