@@ -1,6 +1,7 @@
 
 package is.hi.mylla.vidmot;
 
+import is.hi.mylla.vinnsla.Mylla;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -35,15 +36,18 @@ public class MyllaAdalController implements Initializable {
     @FXML
     private RadioButton jLeikmadur2;
     private NyrLeikurDialogController sDialogController;
+    private Mylla mylla = new Mylla(); //Mylla vinnsluklasi
     
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         myllaBord.setAdal(this);
         GraphicsContext g = mittCanvas.getGraphicsContext2D();
         myllaBord.teiknaGrunnbord(g);
+        myllaBord.smidaMylluArray(this);
     }    
 
-    
+
 
    /**
      * Birtir villuskilaboð í strengnum s
@@ -57,8 +61,9 @@ public class MyllaAdalController implements Initializable {
     @FXML
     private void leikmadurHandler(ActionEvent event) {
         RadioButton b = (RadioButton)event.getSource();
-        myllaBord.leikmadurGerir(Integer.parseInt(b.getId()));
-        
+        int n = Integer.parseInt(b.getId());
+        myllaBord.leikmadurGerir(n);
+        myllaBord.setjaLeikmann(n);
     }
     
     /**
@@ -73,7 +78,7 @@ public class MyllaAdalController implements Initializable {
 
     @FXML
     private void nyrLeikurHandler(ActionEvent event) {
-        //String hefjaLeik = sDialogController.hefjaLeik();
+        sDialogController.hefjaLeik();
     }
 
     @FXML

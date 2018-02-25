@@ -51,7 +51,7 @@ public class Hringur extends Ped{
     
     public Hringur (MyllaPane b, Color l) {
             super(b);
-            ped = new Circle(100, 100, 10);
+            ped = new Circle(120, 120, 10);
             ped.setOnMouseDragged(mouseDragged);
             ped.setOnMouseReleased(mouseReleased);
             ped.setFill(l);

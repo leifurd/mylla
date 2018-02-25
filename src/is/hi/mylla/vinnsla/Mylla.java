@@ -5,6 +5,8 @@
  */
 package is.hi.mylla.vinnsla;
 
+import is.hi.mylla.vidmot.MylluReitur;
+
 /**
  *
  * @author Ebba Þóra Hvannberg ebba@hi.is
@@ -13,32 +15,58 @@ package is.hi.mylla.vinnsla;
  *
  */
 public class Mylla implements MyllaInterface {
-    
-    private int nuverandiLeikmadur;
+    private int nuverandiLeikmadur; //Númer núverandi leikmanns
 
     @Override
-    public boolean erThegarABordi(int n) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean erThegarABordi(int n, int m, MylluReitur[][] x) {
+        return x[n][m].getLeikmadur() > 0;
     }
 
     @Override
     public int getNuverandiLeikmadur() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return nuverandiLeikmadur;
     }
 
     @Override
     public void setNuverandiLeikmadur(int n) {
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        nuverandiLeikmadur = n;
     }
 
     @Override
-    public void setjaABord(int n) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public void setjaABord(int n, int m, MylluReitur[][] x) {
+        if(!erThegarABordi(n,m,x))
+            x[n][m].setLeikmadur(getNuverandiLeikmadur()); 
+        }
 
     @Override
-    public int vinningur() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean vinningur(MylluReitur[][] x) {
+        //athuga allar línur
+        for(int k=1; k<=2; k++){
+            for(int i=0; i<3;i++){
+                //athuga alla dálka
+                for(int j=0;j<3;j++){
+                    //ef láréttur vinningur
+                    if(x[i][0].getLeikmadur()== k && x[i][1].getLeikmadur() == k 
+                            && x[i][2].getLeikmadur() == k) 
+                        return true;
+                    //ef lóðréttur vinningur
+                    if(x[0][j].getLeikmadur() == k && x[1][j].getLeikmadur() == k 
+                            && x[2][j].getLeikmadur() == k)
+                        return true;
+                }
+            }
+            //athuga vinning á ská, báða vegu
+            //ef enginn vinningur: false
+             if ((x[2][0].getLeikmadur() == k && x[1][1].getLeikmadur() == k
+                && x[0][2].getLeikmadur() == k)
+                || (x[0][0].getLeikmadur() == k && x[1][1].getLeikmadur() == k 
+                        && x[2][2].getLeikmadur() == k))
+                 return true;
+        }
+        return false;
     }
+    
+    
+
+
 }

@@ -5,6 +5,8 @@
  */
 package is.hi.mylla.vinnsla;
 
+import is.hi.mylla.vidmot.MylluReitur;
+
 /**
  *
  * @author Ebba Þóra Hvannberg ebba@hi.is
@@ -13,41 +15,43 @@ package is.hi.mylla.vinnsla;
  */
 public interface MyllaInterface {
 
-    /**
-     * Skilar true ef peð er þegar á reit n
-     *
-     * @param n reitur peðs
-     * @return satt ef peð er á reit n annars ósatt
-     */
-    boolean erThegarABordi(int n);
-
+     /**
+    * Skilar true ef peð er þegar á reit n
+    *
+    * @param n línu nr reits
+    * @param m dálk nr. reits
+    * @return satt ef peð er á reit n annars ósatt
+    */
+    boolean erThegarABordi(int n, int m, MylluReitur[][] x);
+    
     /**
      * Get aðferð fyrir tilviksbreytuna nuverandiLeikmadur
      *
      * @return
      */
     int getNuverandiLeikmadur();
-
+    
     /**
      * Leikmaður n gerir
      *
      * @param n leikmaður
      */
     void setNuverandiLeikmadur(int n);
-
+    
     /**
-     * Setur peð á reit n
+     * Setur peð á reit [n,m]
      *
-     * @param n nr. reits
+     * @param n línu nr. reits
+     * @param m dálks nr. reits
      */
-    void setjaABord(int n);
-
+    void setjaABord(int n, int m, MylluReitur[][] x);
+    
     /**
-     * Skilar tölu á bilinu 0-6 eftir því hvort fannst vinningur á láréttum,
-     * lóðréttum eða horn-í-horn
+     * Skilar boolean eftir því hvort vinningur sé kominn eða ekki
      *
-     * @return tala
+     * @return boolean true ef vinningur, annars false
      */
-    int vinningur();
+    boolean vinningur(MylluReitur[][] x);
+    
     
 }

@@ -29,8 +29,9 @@ public class MyllaPane extends Pane {
 
     // Vinnsluklasinn sem heldur utan um mylluborðið og leikmenn
     private final Mylla mittBord = new Mylla();
-    
+    public final MylluReitur myllureitir [][] = new MylluReitur[3][3]; //Fylki af öllum myllureitum
    
+    
     
     /**
      * Athugar á hvaða reit peð er, hvort peð er þegar á þeim reit setur peðið á
@@ -40,9 +41,65 @@ public class MyllaPane extends Pane {
      * @param y y-gildi hnits
      */
     public void setjaABord(int x, int y) {
+        int reitur[] = finnaReit(x, y);
+        
+        if (checkReitur(reitur))return;
+        if (checkBounds(reitur))return;
+        mittBord.setjaABord(reitur[0],reitur[1], myllureitir);
+        mAdal.birtaVilluskilaboð("Peð lendir á borði"); 
+        if (mittBord.vinningur(myllureitir))
+            mAdal.birtaVilluskilaboð("Vinningur! Leikmaður " + mittBord.getNuverandiLeikmadur() + " vann"); 
+        
+          
+    }
+    
+    /**
+     * Ef reitur inniheldur núþegar peð
+     * @param reitur
+     * @return true ef reitur er upptekinn
+     */
+    private boolean checkReitur(int[] reitur) {
+        if (myllureitir[reitur[0]][reitur[1]].getLeikmadur()>0) {
+            mAdal.birtaVilluskilaboð("Reitur upptekinn, reyndu aftur");
+            return true;
+        }
+        return false;
+    }
 
-        mAdal.birtaVilluskilaboð("peð lendir á borði");  
-       
+    /**
+     * Ef peð lendir utan borðs
+     * @param reitur
+     * @return true ef  peð lendir utan borðs
+     */
+    private boolean checkBounds(int[] reitur) {
+        
+        if (reitur[0]==-1) {
+            mAdal.birtaVilluskilaboð("Peð lendir utan borðs, reyndu aftur");
+            return true;
+        }
+        return false;
+    }
+    
+    public void setjaLeikmann(int n){
+        mittBord.setNuverandiLeikmadur(n);
+    }
+
+    /**
+     * Finnur línu og dálksgildi reits fyrir gefin x,y hnit
+     * @param x x-hnit
+     * @param y y-hnit
+     * @return fylki sem inniheldur línu númer og dálknúmer
+     */
+    private int []finnaReit (int x, int y) {
+        for (int i = 0; i<myllureitir.length; i++) {
+            for (int j = 0; j<myllureitir.length; j++) {
+                if (myllureitir[i][j].erInnan(x, y)) {
+                    return new int[] {i,j};
+                }
+                
+            }
+        }
+      return new int[] {-1,-1}; 
     }
     
     public void teiknaGrunnbord(GraphicsContext g){
@@ -65,9 +122,8 @@ public class MyllaPane extends Pane {
      * @param l LEIKMADUR1 eða LEIKMADUR2
      */
     private void nyttPed(int leikmadur) {
-        // Forritun þessarar aðferðar er ólokið 
         Ped s;
-        if(leikmadur == 2)
+        if(leikmadur == 1)
             s = new Ferningur(this, Color.RED);
         else 
             s = new Hringur(this, Color.GREEN);
@@ -80,6 +136,18 @@ public class MyllaPane extends Pane {
      */
     void setAdal(MyllaAdalController aThis) {
         mAdal = aThis;
+    }
+
+    public void smidaMylluArray(MyllaAdalController myllaAdalController) {
+        for (int i = 0; i < myllureitir.length; i++) {
+            for (int j = 0; j < myllureitir.length; j++) {
+                myllureitir[i][j] = new MylluReitur(180 + (i * 40), 180 + (j * 40), 40, 40, 0);
+            }
+        }
+    }
+    
+    public void setMylluArray(int n, int m, int l){
+        myllureitir[n][m].setLeikmadur(l); 
     }
 
     
