@@ -20,11 +20,15 @@ public abstract class Ped {
     protected MyllaPane bord;
     protected Color litur;
     
+    
     public Ped(MyllaPane b) {
         bord = b;
-    
     }
-
+    
+    /**
+     * Skilar ped
+     * @return 
+     */
     public Shape getPed() {
         return ped;
     }

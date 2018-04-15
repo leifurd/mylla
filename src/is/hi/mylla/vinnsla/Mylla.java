@@ -5,13 +5,12 @@
  */
 package is.hi.mylla.vinnsla;
 
-import is.hi.mylla.vidmot.MyllaPane;
 import is.hi.mylla.vidmot.MylluReitur;
 
 /**
  *
- * @author Ebba Þóra Hvannberg ebba@hi.is
- *
+ * @author Leifur Daníel Sigurðarson lds2@hi.is
+ * Háskóli Íslands
  * Vinnsluklasi fyrir mylluborð
  *
  */
@@ -19,13 +18,11 @@ public class Mylla implements MyllaInterface {
     private int nuverandiLeikmadur; //Númer núverandi leikmanns
     public final MylluReitur[][] myllureitir = new MylluReitur[3][3]; //Fylki af öllum myllureitum
     private int nuverandiPed; //Númer núverandi peðs
-    private int[] stigatafla = new int[2]; // Array sem heldur utanum stigatöflu
 
 
-    public Mylla(int[] stigatafla){
+    public Mylla(){
         smidaMylluArray();
         nuverandiPed = -1; //nr peðs. Hækkar eftir hvert nýtt peð á borði
-        this.stigatafla = stigatafla; //Setur stigatöflu
     }
 
     @Override
@@ -180,18 +177,4 @@ public class Mylla implements MyllaInterface {
         }
         return null;
     }
-
-    public void updateStig(int l){
-        if(l==1) stigatafla[0]++;
-        else stigatafla[1]++;
-    }
-
-    public int[] getStigatafla() {
-        return stigatafla;
-    }
-
-    public void setStigatafla(int[] stigatafla) {
-        this.stigatafla = stigatafla;
-    }
-    
 }

@@ -9,16 +9,18 @@ package is.hi.mylla.vidmot;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 
 /**
- *
- * @author Leifur Daníel Sigurðarson <lds2@hi.is>
- * @date
+ * Hringur sem erfir frá peði og er á mylluborði. Getur brugðist við drag
+ * og release á músinni. Þegar músinni er sleppt er athugað hvort 
+ * peðið sé innan mylluborðsins 
+ * @author Leifur Daníel Sigurðarson lds2@hi.is  
+ * @date April 2018
  * Háskóli Íslands
  */
+
 public class Hringur extends Ped{
     
     /**
@@ -48,7 +50,11 @@ public class Hringur extends Ped{
             };
     
     
-    
+    /**
+     * Smíðar hring á mylluborð b
+     * @param b 
+     * @param l 
+     */
     public Hringur (MyllaPane b, Color l) {
             super(b);
             ped = new Circle(120, 120, 10);

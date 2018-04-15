@@ -9,22 +9,18 @@ package is.hi.mylla.vidmot;
  */
 public class MylluReitur {
 
-    private final int xPos;
-
-    public int getxPos() {
-        return xPos;
-    }
-    private final int yPos;
-    private final int breidd;
-    private final int haed;
-    private int leikmadur;
+    private final int xPos;   // x-hnit
+    private final int yPos;   // y-hnit
+    private final int breidd; // breidd reits
+    private final int haed;   // hæð reits
+    private int leikmadur;    // nr leikmanns á reit
 
     
     /**
      * Smiður sem býr til reit á myllu í staðsetningu (x,y) með breidd og hæð
      *
-     * @param x
-     * @param y
+     * @param x x-hnit
+     * @param y y-hnit
      * @param b breidd
      * @param h hæð
      * @param l númer leikmanns á reit. 0 == Reitur laus
@@ -57,10 +53,11 @@ public class MylluReitur {
         return leikmadur;
     }
     
+    /**
+     * Skilgreinir hver núverandi leikmaður er.
+     * @param n 
+     */
     public void setLeikmadur(int n) {
         leikmadur = n;
-    }
-
-    
-    
+    }  
 }

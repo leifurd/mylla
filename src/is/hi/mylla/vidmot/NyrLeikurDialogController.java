@@ -28,37 +28,42 @@ import javafx.scene.shape.Shape;
 public class NyrLeikurDialogController implements Initializable {
 
     @FXML
-    private AnchorPane anchorPane;
+    private AnchorPane anchorPane; //Viðmóts anchorpane
     @FXML
-    private TextField leikmadur1;
+    private TextField leikmadur1;  //Nafn leikmanns 1
     @FXML
-    private TextField leikmadur2;
-    private MyllaAdalController myllaAdal;
-    private String[] leikmenn = new String[2];
+    private TextField leikmadur2;  //Nafn leikmanns 2
+    private final String[] leikmenn = new String[2]; //Nöfn leikmanna í Array
 
     /**
      * Initializes the controller class.
-
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
     }    
 
+    /**
+     * Býr til dialog gluggann fyrir nýjan leik
+     * Ef verið er að keyra gluggann í fyrsta skipti er leikurHafinn == false
+     * @param leikurHafinn
+     * @return 
+     */
     public String[] hefjaLeik(boolean leikurHafinn) {
         DialogPane p = new DialogPane();
         p.setContent(anchorPane);
         anchorPane.setVisible(true);
-        
         Dialog d = new Dialog();        
         d.setDialogPane(p);
         d.setHeaderText("Mylla");
         d.setTitle("Hefja nýjan leik");
-        
         ButtonType iLagi = new ButtonType("Í lagi",
             ButtonBar.ButtonData.OK_DONE);
         d.getDialogPane().getButtonTypes().add(iLagi);
         
+        // Ef glugginn hefur verið keyrður áður
+        // Leyfa notanda að hætta við
         if(leikurHafinn){
         ButtonType heattaVid = new ButtonType("Hætta við",
             ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -66,12 +71,14 @@ public class NyrLeikurDialogController implements Initializable {
         }
         
         Optional<ButtonType> utkoma = d.showAndWait();
+            // Ef ýtt er á Í lagi, skila nöfnum leikmanna.
             if (utkoma.isPresent() && (utkoma.get()
                     .getButtonData() == ButtonBar.ButtonData.OK_DONE)){
                 leikmenn[0] = leikmadur1.getText();
                 leikmenn[1] = leikmadur2.getText();
                 return leikmenn;
             }
+            // Annars skila null.
             return null;            
     }
 }

@@ -11,8 +11,8 @@ import javafx.scene.shape.Shape;
  * Ferningur sem erfir frá peði og er á mylluborði. Getur brugðist við drag
  * og release á músinni. Þegar músinni er sleppt er athugað hvort 
  * peðið sé innan mylluborðsins 
- * @author Ebba Þóra Hvannberg ebba@hi.is 
- * @date Febrúar 2018
+ * @author Leifur Daníel Sigurðarson lds2@hi.is 
+ * @date Apríl 2018
  * Háskóli Íslands
  */
 public class Ferningur extends Ped {

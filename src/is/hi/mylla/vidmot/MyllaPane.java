@@ -4,14 +4,10 @@ package is.hi.mylla.vidmot;
 
 
 import is.hi.mylla.vinnsla.Mylla;
+import is.hi.mylla.vinnsla.Stigatafla;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
-import javafx.scene.*;
 import javafx.scene.paint.*;
-import javafx.scene.canvas.*;
-import javafx.scene.effect.BlendMode;
-import static javafx.scene.paint.Color.*;
-import javafx.scene.shape.Circle;
 
 /**
  * Viðmótshlutur sem teiknar mylluborð, býr til peð og meðhöndlar aðgerð þegar 
@@ -20,22 +16,16 @@ import javafx.scene.shape.Circle;
  * @date 
  * Háskóli Íslands
  */
+
 public class MyllaPane extends Pane {
 
-    private MyllaAdalController mAdal;
-    private Ped[] s = new Ped[9]; //Array af peðum í númera röð
-    private Ped[] v = new Ped[9]; //Array af númerum reita sem peðin lenda á
-    private int[] nullStig = {0,0};
-    
-    public MyllaPane () { 
-    }
-    
-
+    private MyllaAdalController mAdal; //Tilvik af MyllaAdalController
+    private final Ped[] s = new Ped[9]; //Array af peðum í númera röð
+    private final Ped[] v = new Ped[9]; //Array af númerum reita sem peðin lenda á
+    private final Stigatafla stigatafla = new Stigatafla(); //Tilvik af Stigatafla   
     // Vinnsluklasinn sem heldur utan um mylluborðið og leikmenn
-    private Mylla mittBord = new Mylla(nullStig);
-   
-    
-    
+    private Mylla mittBord = new Mylla();
+ 
     /**
      * Athugar á hvaða reit peð er, hvort peð sé núþegar á þeim reit, setur peðið á
      * þann reit og athugar hvort það er vinningur.
@@ -45,30 +35,41 @@ public class MyllaPane extends Pane {
      */
     public void setjaABord(int x, int y) {
         int reitur[] = mittBord.finnaReit(x, y);
-        if (checkBounds(reitur))return;
-        if (checkReitur(reitur))return;
+        if (checkBounds(reitur))return; //Peð lendir utan borðs
+        if (checkReitur(reitur))return; //Peð lendir á uppteknum reit
         mittBord.setjaABord(reitur[0],reitur[1]);
         mAdal.birtaVilluskilaboð("Peð lendir á borði"); 
         s[mittBord.getNuverandiPed()].pedIMidju(mittBord.finnaMidjuReits(x, y));
         v[(reitur[0]+(reitur[1]*3))]=s[mittBord.getNuverandiPed()];
         disablePed();
-        
         int[] vinningur = mittBord.vinningur();
-        if (vinningur!=null){         
-            for(int i=0; i<3; i++){
-                v[vinningur[i]].vinningsPed(mittBord.getNuverandiLeikmadur());
-            }
-            mAdal.birtaVilluskilaboð("Vinningur!  " 
-                    + mAdal.getVinningshafi(vinningur[3]) + " vinnur þessa umferð."); 
-            mAdal.virkjaNyUmferdHnappa(true);
-            mittBord.updateStig(vinningur[3]);
-            synaStig(mAdal.getCanvas());
+        if (vinningur!=null){        // Ef vinningur 
+            sigurvegari(vinningur);
         }
-        else if (mittBord.maxPed()){
+        else if (mittBord.maxPed()){ // Ef mylluborð er fullt
             mAdal.birtaVilluskilaboð("Enginn vinningur, leik lokið"); 
             mAdal.virkjaNyUmferdHnappa(true);
         }
-        else mAdal.virkjaRadioHnappa(true);
+        else mAdal.virkjaRadioHnappa(true); //Leyfa næsta leikmanni að spila
+    }
+
+    /**
+     * Birtir vinningsskilaboð
+     * Virkjar ný umferðs hnapp
+     * Uppfærir stigatöflu
+     * Litar vinningspeð blátt
+     * @param vinningur 
+     */
+    private void sigurvegari(int[] vinningur) {
+        // Lita vinningspeð
+        for(int i=0; i<3; i++){ 
+            v[vinningur[i]].vinningsPed(mittBord.getNuverandiLeikmadur());
+        }
+        mAdal.birtaVilluskilaboð("Vinningur!  "
+                + mAdal.getVinningshafi(vinningur[3]) + " vinnur þessa umferð.");
+        mAdal.virkjaNyUmferdHnappa(true);
+        stigatafla.updateStig(vinningur[3]);
+        synaStig(mAdal.getCanvas());
     }
 
     /**
@@ -127,12 +128,17 @@ public class MyllaPane extends Pane {
         g.strokeLine(240, 160, 240, 280);
     }
     
+    /**
+     * Teiknar stigatöflu.
+     * @param g 
+     */
     public void synaStig(GraphicsContext g) {
-        g.clearRect(0, 0, 150, 150);
+        g.clearRect(0, 280, 600, 600);
         String[] nafn = mAdal.getNames();
-        int[] stig = mittBord.getStigatafla();
-        g.fillText(nafn[0] + ": " + stig[0], 50, 100);
-        g.fillText(nafn[1] + ": " + stig[1],50,120);
+        int[] stig = stigatafla.getStigatafla();
+        g.fillText("Stigatafla:", 100, 320);
+        g.fillText(nafn[0] + ": " + stig[0], 100, 340);
+        g.fillText(nafn[1] + ": " + stig[1],100,360);
         System.out.println(stig[0]+"og "+ stig[1]);
 
     }
@@ -167,12 +173,18 @@ public class MyllaPane extends Pane {
         mAdal = aThis;
     }
     
-    public void nyrLeikur(int[] stigatafla){
+    /**
+     * Hreinsar peð af mylluborði
+     * Býr til nýtt tilvik af Mylla vinnsluklasa
+     * Teiknar stigatöflu, hreinsar skilaboð og virkir radio buttons.
+     */
+    public void nyrLeikur(){
         int fjoldi = getChildren().size();
         getChildren().remove(1, fjoldi);
-        mittBord = new Mylla(stigatafla);
+        mittBord = new Mylla();
         mAdal.birtaVilluskilaboð("");
         mAdal.virkjaRadioHnappa(true);
+        synaStig(mAdal.getCanvas());
     }
     
 
