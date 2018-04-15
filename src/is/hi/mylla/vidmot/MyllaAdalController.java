@@ -18,14 +18,14 @@ import javafx.scene.control.ToggleGroup;
 /**
  * Controller fyrir mylluna. Er núna mjög einfaldur 
  * 
- * @author Ebba Þóra Hvannberg ebba@hi.is
+ * @author Leifur Daníel Sigurðarson lds2@hi.is 
  */
 public class MyllaAdalController implements Initializable {
     
     @FXML
     private Label skilabod;         // Skilaboð
     @FXML
-    private MyllaPane myllaBord;    // Mylluborðið 
+    private MyllaPane myllaBord = new MyllaPane();    // Mylluborðið 
   
     @FXML
     private Canvas mittCanvas;      // Teiknisvæði 
@@ -33,18 +33,26 @@ public class MyllaAdalController implements Initializable {
     private ToggleGroup leikmennToggle;
     @FXML
     private RadioButton jLeikmadur1;
+
     @FXML
     private RadioButton jLeikmadur2;
-    private NyrLeikurDialogController sDialogController;
-    private Mylla mylla = new Mylla(); //Mylla vinnsluklasi
     
+    
+    
+    @FXML
+    private NyrLeikurDialogController sDialogController;
+    @FXML
+    private Button jNyUmferd;
+    
+    int[] stigatafla = {0,0}; 
+    private Mylla mylla = new Mylla(stigatafla); //Mylla vinnsluklasi
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         myllaBord.setAdal(this);
-        GraphicsContext g = mittCanvas.getGraphicsContext2D();
-        myllaBord.teiknaGrunnbord(g);
-        myllaBord.smidaMylluArray(this);
+        myllaBord.teiknaGrunnbord(mittCanvas.getGraphicsContext2D());
+        nyrLeikur(false);
+        myllaBord.synaStig(mittCanvas.getGraphicsContext2D());
     }    
 
 
@@ -64,6 +72,7 @@ public class MyllaAdalController implements Initializable {
         int n = Integer.parseInt(b.getId());
         myllaBord.leikmadurGerir(n);
         myllaBord.setjaLeikmann(n);
+        virkjaRadioHnappa(false);
     }
     
     /**
@@ -78,7 +87,18 @@ public class MyllaAdalController implements Initializable {
 
     @FXML
     private void nyrLeikurHandler(ActionEvent event) {
-        sDialogController.hefjaLeik();
+        nyrLeikur(true); 
+    }
+
+    private void nyrLeikur(boolean nyrleikur) {
+        String[] nofn = sDialogController.hefjaLeik(nyrleikur);
+        if (nofn != null){
+            virkjaNyUmferdHnappa(false);
+            jLeikmadur1.setText(nofn[0]);
+            jLeikmadur2.setText(nofn[1]);
+            myllaBord.nyrLeikur(stigatafla); 
+            leikmennToggle.selectToggle(null);
+        }
     }
 
     @FXML
@@ -86,5 +106,56 @@ public class MyllaAdalController implements Initializable {
         Platform.exit();
     }
 
+    /**
+     * Gerir radio hnappa virka
+     * @param true ef á að virkja, annars false.
+     */
+    public void virkjaRadioHnappa(Boolean b) {
+        jLeikmadur1.setDisable(!b);
+        jLeikmadur2.setDisable(!b);
+    }
+
+    @FXML
+    private void nyUmferd(ActionEvent event) {
+        
+        int [] stig = mylla.getStigatafla();
+        System.out.println(stig[0]+ "og "+ stig[1]);
+        myllaBord.nyrLeikur(stig);
+        mylla.setStigatafla(stig);
+        virkjaNyUmferdHnappa(false);
+        leikmennToggle.selectToggle(null);
+    }
     
+    /**
+     * Afvirkja eða virkja takka fyrir nýja umferð
+     * @param b 
+     */
+    public void virkjaNyUmferdHnappa(boolean b) {
+        jNyUmferd.setDisable(!b);
+    }
+
+    /**
+     * Skilar nafni vinningshafa.
+     * @param i int númer leikmanns
+     * @return String nafn vinningshafa
+     */
+    String getVinningshafi(int i) {
+        if (i==1)
+            return jLeikmadur1.getText();
+        return jLeikmadur2.getText();
+    }
+    
+    String[] getNames(){
+        String[] l = {jLeikmadur1.getText(), jLeikmadur2.getText()};
+        return l;
+    }
+
+    GraphicsContext getCanvas() {
+        return mittCanvas.getGraphicsContext2D();
+    }
+    
+    public void show(){
+        int[] stig = mylla.getStigatafla();
+        System.out.println(stig[0] + "og " + stig[1]);
+    }
 }

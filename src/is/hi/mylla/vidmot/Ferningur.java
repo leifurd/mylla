@@ -38,8 +38,8 @@ public class Ferningur extends Ped {
                 @Override
                 public void handle(MouseEvent event) {
                     System.out.println (" Mús sleppt ");
-                    bord.setjaABord( (int)((Rectangle)ped).getX(),
-                               (int)((Rectangle)ped).getY());
+                    bord.setjaABord( (int)((Rectangle)ped).getX()+10,
+                               (int)((Rectangle)ped).getY()+10);
                 }
             };
     
@@ -65,8 +65,8 @@ public class Ferningur extends Ped {
      */
     @Override
     protected void faeraHlut(Shape s, MouseEvent event) {                                  
-        ((Rectangle)s).setX(event.getX());
-        ((Rectangle)s).setY(event.getY());
+        ((Rectangle)s).setX(event.getX()-10);
+        ((Rectangle)s).setY(event.getY()-10);
     }  
     
 }

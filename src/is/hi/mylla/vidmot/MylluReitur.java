@@ -3,7 +3,7 @@ package is.hi.mylla.vidmot;
 
 /**
  *
- * @author Ebba Þóra Hvannberg ebba@hi.is
+ * @author Leifur Daníel Sigurðarson lds2@hi.is
  *
  * Klasi sem heldur utan um staðsetningu og stærð reits myllunnar
  */

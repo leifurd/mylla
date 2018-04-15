@@ -9,48 +9,73 @@ import javafx.scene.layout.Pane;
 import javafx.scene.*;
 import javafx.scene.paint.*;
 import javafx.scene.canvas.*;
+import javafx.scene.effect.BlendMode;
+import static javafx.scene.paint.Color.*;
+import javafx.scene.shape.Circle;
 
 /**
  * Viðmótshlutur sem teiknar mylluborð, býr til peð og meðhöndlar aðgerð þegar 
  * peð er sett á borð 
- * @author Ebba Þóra Hvannberg ebba@hi.is 
+ * @author Leifur Daníel Sigurðarson lds2@hi.is
  * @date 
  * Háskóli Íslands
  */
 public class MyllaPane extends Pane {
 
     private MyllaAdalController mAdal;
-    
+    private Ped[] s = new Ped[9]; //Array af peðum í númera röð
+    private Ped[] v = new Ped[9]; //Array af númerum reita sem peðin lenda á
+    private int[] nullStig = {0,0};
     
     public MyllaPane () { 
-        
     }
     
 
     // Vinnsluklasinn sem heldur utan um mylluborðið og leikmenn
-    private final Mylla mittBord = new Mylla();
-    public final MylluReitur myllureitir [][] = new MylluReitur[3][3]; //Fylki af öllum myllureitum
+    private Mylla mittBord = new Mylla(nullStig);
    
     
     
     /**
-     * Athugar á hvaða reit peð er, hvort peð er þegar á þeim reit setur peðið á
+     * Athugar á hvaða reit peð er, hvort peð sé núþegar á þeim reit, setur peðið á
      * þann reit og athugar hvort það er vinningur.
      *
      * @param x x-gildi hnits
      * @param y y-gildi hnits
      */
     public void setjaABord(int x, int y) {
-        int reitur[] = finnaReit(x, y);
-        
-        if (checkReitur(reitur))return;
+        int reitur[] = mittBord.finnaReit(x, y);
         if (checkBounds(reitur))return;
-        mittBord.setjaABord(reitur[0],reitur[1], myllureitir);
+        if (checkReitur(reitur))return;
+        mittBord.setjaABord(reitur[0],reitur[1]);
         mAdal.birtaVilluskilaboð("Peð lendir á borði"); 
-        if (mittBord.vinningur(myllureitir))
-            mAdal.birtaVilluskilaboð("Vinningur! Leikmaður " + mittBord.getNuverandiLeikmadur() + " vann"); 
+        s[mittBord.getNuverandiPed()].pedIMidju(mittBord.finnaMidjuReits(x, y));
+        v[(reitur[0]+(reitur[1]*3))]=s[mittBord.getNuverandiPed()];
+        disablePed();
         
-          
+        int[] vinningur = mittBord.vinningur();
+        if (vinningur!=null){         
+            for(int i=0; i<3; i++){
+                v[vinningur[i]].vinningsPed(mittBord.getNuverandiLeikmadur());
+            }
+            mAdal.birtaVilluskilaboð("Vinningur!  " 
+                    + mAdal.getVinningshafi(vinningur[3]) + " vinnur þessa umferð."); 
+            mAdal.virkjaNyUmferdHnappa(true);
+            mittBord.updateStig(vinningur[3]);
+            synaStig(mAdal.getCanvas());
+        }
+        else if (mittBord.maxPed()){
+            mAdal.birtaVilluskilaboð("Enginn vinningur, leik lokið"); 
+            mAdal.virkjaNyUmferdHnappa(true);
+        }
+        else mAdal.virkjaRadioHnappa(true);
+    }
+
+    /**
+     * Slekkur á núverandi peði svo ekki sé hægt að færa það.
+     */
+    private void disablePed() {
+        this.getChildren().get(mittBord.getNuverandiPed()).setDisable(true); 
     }
     
     /**
@@ -59,8 +84,10 @@ public class MyllaPane extends Pane {
      * @return true ef reitur er upptekinn
      */
     private boolean checkReitur(int[] reitur) {
-        if (myllureitir[reitur[0]][reitur[1]].getLeikmadur()>0) {
+        if (mittBord.myllureitir[reitur[0]][reitur[1]].getLeikmadur()>0) {
             mAdal.birtaVilluskilaboð("Reitur upptekinn, reyndu aftur");
+            s[mittBord.getNuverandiPed()]
+                    .pedTilBaka(mittBord.getNuverandiLeikmadur());
             return true;
         }
         return false;
@@ -72,7 +99,6 @@ public class MyllaPane extends Pane {
      * @return true ef  peð lendir utan borðs
      */
     private boolean checkBounds(int[] reitur) {
-        
         if (reitur[0]==-1) {
             mAdal.birtaVilluskilaboð("Peð lendir utan borðs, reyndu aftur");
             return true;
@@ -80,28 +106,19 @@ public class MyllaPane extends Pane {
         return false;
     }
     
+    /**
+     * Segir til um hver núverandi leikmaður er
+     * @param n 
+     */
     public void setjaLeikmann(int n){
         mittBord.setNuverandiLeikmadur(n);
     }
 
-    /**
-     * Finnur línu og dálksgildi reits fyrir gefin x,y hnit
-     * @param x x-hnit
-     * @param y y-hnit
-     * @return fylki sem inniheldur línu númer og dálknúmer
-     */
-    private int []finnaReit (int x, int y) {
-        for (int i = 0; i<myllureitir.length; i++) {
-            for (int j = 0; j<myllureitir.length; j++) {
-                if (myllureitir[i][j].erInnan(x, y)) {
-                    return new int[] {i,j};
-                }
-                
-            }
-        }
-      return new int[] {-1,-1}; 
-    }
     
+    /**
+     * Teiknar mylluborð.
+     * @param g 
+     */
     public void teiknaGrunnbord(GraphicsContext g){
         g.setStroke(Color.BLUE);
         g.strokeLine(160, 200, 280, 200);
@@ -110,11 +127,23 @@ public class MyllaPane extends Pane {
         g.strokeLine(240, 160, 240, 280);
     }
     
+    public void synaStig(GraphicsContext g) {
+        g.clearRect(0, 0, 150, 150);
+        String[] nafn = mAdal.getNames();
+        int[] stig = mittBord.getStigatafla();
+        g.fillText(nafn[0] + ": " + stig[0], 50, 100);
+        g.fillText(nafn[1] + ": " + stig[1],50,120);
+        System.out.println(stig[0]+"og "+ stig[1]);
+
+    }
+    
+    /**
+     * Þegar leikmaður á leik, kalla á nyttPed
+     * @param leikmadur 
+     */
     public void leikmadurGerir(int leikmadur){
         nyttPed(leikmadur);
     }
-    
-
     
     /**
      * Setur út nýtt peð fyrir leikmann l (ferning eða hring) 
@@ -122,12 +151,12 @@ public class MyllaPane extends Pane {
      * @param l LEIKMADUR1 eða LEIKMADUR2
      */
     private void nyttPed(int leikmadur) {
-        Ped s;
+        mittBord.nyttPed();
         if(leikmadur == 1)
-            s = new Ferningur(this, Color.RED);
+            s[mittBord.getNuverandiPed()] = new Ferningur(this, Color.RED);
         else 
-            s = new Hringur(this, Color.GREEN);
-        this.getChildren().add(s.getPed());
+            s[mittBord.getNuverandiPed()] = new Hringur(this, Color.GREEN);
+        this.getChildren().add(s[mittBord.getNuverandiPed()].getPed());
     }
 
     /***
@@ -137,19 +166,14 @@ public class MyllaPane extends Pane {
     void setAdal(MyllaAdalController aThis) {
         mAdal = aThis;
     }
-
-    public void smidaMylluArray(MyllaAdalController myllaAdalController) {
-        for (int i = 0; i < myllureitir.length; i++) {
-            for (int j = 0; j < myllureitir.length; j++) {
-                myllureitir[i][j] = new MylluReitur(180 + (i * 40), 180 + (j * 40), 40, 40, 0);
-            }
-        }
+    
+    public void nyrLeikur(int[] stigatafla){
+        int fjoldi = getChildren().size();
+        getChildren().remove(1, fjoldi);
+        mittBord = new Mylla(stigatafla);
+        mAdal.birtaVilluskilaboð("");
+        mAdal.virkjaRadioHnappa(true);
     }
     
-    public void setMylluArray(int n, int m, int l){
-        myllureitir[n][m].setLeikmadur(l); 
-    }
 
-    
-    
 }

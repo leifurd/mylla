@@ -22,7 +22,7 @@ public interface MyllaInterface {
     * @param m dálk nr. reits
     * @return satt ef peð er á reit n annars ósatt
     */
-    boolean erThegarABordi(int n, int m, MylluReitur[][] x);
+    boolean erThegarABordi(int n, int m);
     
     /**
      * Get aðferð fyrir tilviksbreytuna nuverandiLeikmadur
@@ -44,14 +44,21 @@ public interface MyllaInterface {
      * @param n línu nr. reits
      * @param m dálks nr. reits
      */
-    void setjaABord(int n, int m, MylluReitur[][] x);
+    void setjaABord(int n, int m);
     
     /**
      * Skilar boolean eftir því hvort vinningur sé kominn eða ekki
      *
      * @return boolean true ef vinningur, annars false
      */
-    boolean vinningur(MylluReitur[][] x);
+    int[] vinningur();
+    
+    /**
+     * Athugar hvort búið sé að fylla alla reiti af peðum
+     * @param x
+     * @return boolean true ef allir reitir fullir
+     */
+    boolean maxPed();
     
     
 }

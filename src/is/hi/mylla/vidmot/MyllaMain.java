@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author Ebba Þóra Hvannberg ebba@hi.is
+ * @author Leifur Daníel Sigurðarson lds2@hi.is
  */
 public class MyllaMain extends Application {
     

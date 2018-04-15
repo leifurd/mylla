@@ -58,8 +58,8 @@ public class Hringur extends Ped{
     }
     
     
-         /**
-     * Færir  ferning
+    /**
+     * Færir  hring
      * @param s peðið 
      * @param event upplýsingar um released atburðurinn - notum (x,y)
      */
@@ -68,5 +68,11 @@ public class Hringur extends Ped{
         ((Circle)s).setCenterX(event.getX());
         ((Circle)s).setCenterY(event.getY());
     }  
+    
+    
+    public Circle getPedd(){
+        return ((Circle)ped);
+    }
+
     
 }

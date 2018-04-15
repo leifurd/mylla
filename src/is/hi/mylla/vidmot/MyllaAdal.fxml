@@ -11,6 +11,7 @@
 
 <Group xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="is.hi.mylla.vidmot.MyllaAdalController">
    <children>
+       
       <AnchorPane prefHeight="606.0" prefWidth="847.0">
          <children>
             <SplitPane prefHeight="605.0" prefWidth="847.0">
@@ -22,7 +23,8 @@
                   </MyllaPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="482.0" prefWidth="373.0">
                      <children>
-                        <Label fx:id="skilabod" layoutX="48.0" layoutY="269.0" prefHeight="64.0" prefWidth="190.0" />
+                        <Button fx:id="jNyUmferd" disable="true" layoutX="48.0" layoutY="182.0" mnemonicParsing="false" onAction="#nyUmferd" prefHeight="47.0" prefWidth="101.0" text="Ný Umferð" />
+                        <Label fx:id="skilabod" layoutX="48.0" layoutY="269.0" prefHeight="161.0" prefWidth="383.0" />
                         <RadioButton id="1" fx:id="jLeikmadur1" layoutX="48.0" layoutY="82.0" mnemonicParsing="false" onAction="#leikmadurHandler" text="Leikmaður 1">
                            <toggleGroup>
                               <ToggleGroup fx:id="leikmennToggle" />

@@ -30,9 +30,11 @@ public class NyrLeikurDialogController implements Initializable {
     @FXML
     private AnchorPane anchorPane;
     @FXML
-    private TextField jLeikmadur1;
+    private TextField leikmadur1;
     @FXML
-    private TextField jLeikmadur2;
+    private TextField leikmadur2;
+    private MyllaAdalController myllaAdal;
+    private String[] leikmenn = new String[2];
 
     /**
      * Initializes the controller class.
@@ -43,28 +45,33 @@ public class NyrLeikurDialogController implements Initializable {
         // TODO
     }    
 
-    void hefjaLeik() {
+    public String[] hefjaLeik(boolean leikurHafinn) {
         DialogPane p = new DialogPane();
         p.setContent(anchorPane);
         anchorPane.setVisible(true);
         
         Dialog d = new Dialog();        
         d.setDialogPane(p);
-        d.setHeaderText("Nýr leikur");
+        d.setHeaderText("Mylla");
         d.setTitle("Hefja nýjan leik");
         
         ButtonType iLagi = new ButtonType("Í lagi",
             ButtonBar.ButtonData.OK_DONE);
         d.getDialogPane().getButtonTypes().add(iLagi);
         
+        if(leikurHafinn){
         ButtonType heattaVid = new ButtonType("Hætta við",
-            ButtonBar.ButtonData.OK_DONE);
+            ButtonBar.ButtonData.CANCEL_CLOSE);
         d.getDialogPane().getButtonTypes().add(heattaVid);
+        }
         
         Optional<ButtonType> utkoma = d.showAndWait();
             if (utkoma.isPresent() && (utkoma.get()
-                    .getButtonData() == ButtonBar.ButtonData.OK_DONE))
-                return;              
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.   
+                    .getButtonData() == ButtonBar.ButtonData.OK_DONE)){
+                leikmenn[0] = leikmadur1.getText();
+                leikmenn[1] = leikmadur2.getText();
+                return leikmenn;
+            }
+            return null;            
     }
 }
